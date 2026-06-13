@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Kontrol Utama Guru - SPMB 2026</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
+        body { background: #f4f7fa; padding: 25px; color: #1e293b; }
+        
+        /* Container Dashboard */
+        .dashboard { max-width: 1600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+        
+        /* Header Modern Clean */
+        .header-container { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; margin-bottom: 25px; gap: 20px; }
+        .header-title h2 { color: #0f172a; font-size: 1.7rem; font-weight: 700; letter-spacing: -0.5px; }
+        .header-title p { color: #64748b; margin-top: 4px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+        
+        /* Live Indicator Blink Animation */
+        .live-dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+        /* Real-time Search Input */
+        .search-box { position: relative; width: 100%; max-width: 360px; }
+        .search-box input { width: 100%; padding: 12px 16px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; outline: none; transition: all 0.2s; color: #0f172a; }
+        .search-box input:focus { background: #fff; border-color: #1e3c72; box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1); }
+
+        /* Kotak Panel Statistik Singkat */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px 20px; border-radius: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .stat-card .label { font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: #0f172a; }
+        .stat-card.blue-border { border-left: 4px solid #3b82f6; }
+        .stat-card.green-border { border-left: 4px solid #10b981; }
+        .stat-card.yellow-border { border-left: 4px solid #f59e0b; }
+        .stat-card.red-border { border-left: 4px solid #ef4444; }
+
+        /* Desain Tabel Utama */
+        .table-responsive { width: 100%; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff; }
+        table { width: 100%; border-collapse: collapse; min-width: 1300px; text-align: left; }
+        
+        th { background: #1e3c72; color: #ffffff; padding: 16px; text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; position: sticky; top: 0; }
+        td { padding: 14px 16px; border-bottom: 1px solid #e2e8f0; font-size: 0.925rem; color: #334155; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8fafc; }
+        
+        /* Grid Penataan Berkas Dokumen Drive */
+        .file-grid { display: flex; flex-wrap: wrap; gap: 6px; max-width: 210px; } /* Lebar max disesuaikan agar muat 5 tombol */
+        .btn-view { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 30px; background: #f1f5f9; color: #475569; text-decoration: none; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #cbd5e1; transition: all 0.15s ease; }
+        .btn-view:hover { background: #e2e8f0; color: #1e293b; border-color: #94a3b8; transform: translateY(-1px); }
+        
+        /* Jendela Tombol Aksi */
+        .action-flex { display: flex; gap: 6px; }
+        .action-btn { padding: 8px 14px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.825rem; color: white; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s ease; white-space: nowrap; }
+        .btn-valid { background-color: #10b981; }
+        .btn-valid:hover { background-color: #059669; box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2); }
+        .btn-invalid { background-color: #ef4444; }
+        .btn-invalid:hover { background-color: #dc2626; box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2); }
+        
+        /* Badge Desain Kapsul Pipih */
+        .status-badge { display: inline-block; padding: 6px 12px; border-radius: 50px; font-weight: 600; font-size: 0.75rem; text-align: center; border: 1px solid transparent; white-space: nowrap; }
+        .badge-waiting { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+        .badge-success { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+        .badge-danger { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; }
+        
+        /* Informasi Ringkas Wali */
+        .parent-info { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 8px 12px; border-radius: 6px; border: 1px solid #e2e8f0; line-height: 1.4; min-width: 160px; }
+        .parent-info strong { color: #1e293b; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="header-container">
+        <div class="header-title">
+            <h2>PANEL KEPUTUSAN VALIDASI DATA GURU</h2>
+            <p><span class="live-dot"></span> Sinkronisasi Google Sheets aktif otomatis (Real-time Background Sync)</p>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchTableInput" onkeyup="filterTabelSiswa()" placeholder="Cari Nama Siswa atau NISN...">
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card blue-border">
+            <span class="label">Total Pendaftar Masuk</span>
+            <span class="value" id="statTotal">0</span>
+        </div>
+        <div class="stat-card yellow-border">
+            <span class="label">Sisa Belum Diperiksa</span>
+            <span class="value" id="statBelum">0</span>
+        </div>
+        <div class="stat-card green-border">
+            <span class="label">Berkas Sudah Benar</span>
+            <span class="value" id="statValid">0</span>
+        </div>
+        <div class="stat-card red-border">
+            <span class="label">Berkas Kurang/Salah</span>
+            <span class="value" id="statKurang">0</span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="guruTable">
+            <thead>
+                <tr>
+                    <th style="width: 60px; text-align: center;">No</th>
+                    <th>Nama Lengkap Siswa</th>
+                    <th>NISN Resmi</th>
+                    <th>Tautan Dokumen Berkas</th>
+                    <th>Identitas Orang Tua</th>
+                    <th>Status Berkas</th>
+                    <th>Keputusan Guru (Aksi Cepat)</th>
+                </tr>
+            </thead>
+            <tbody id="guruTableBody">
+                <tr><td colspan="7" style="text-align:center; padding: 50px; color:#64748b; font-weight:bold;">Menghubungkan & Memetakan Jalur Database...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxj_XtVRgL9RvNlbkI91HBNJFkeJl3Ig8y3Gj6Jwe1zBxoQB0969BKScUjr9YsIw8vZcg/exec";
+    
+    // Menyimpan data cache internal agar filter pencarian lancar tanpa panggil ulang API
+    let globalSiswaData = []; 
+
+    async function loadDataGuruSilap() {
+        try {
+            const response = await fetch(`${WEB_APP_URL}?action=read`);
+            const result = await response.json();
+            
+            if (result.status === "success" && result.data.length > 0) {
+                // Saring data sampah sebelum dimasukkan ke render engine
+                globalSiswaData = result.data.filter(siswa => 
+                    siswa.nisn && 
+                    !siswa.nisn.toString().includes("http") && 
+                    siswa.nisn.toString().trim() !== ""
+                );
+                
+                renderTableData(globalSiswaData);
+                updateStatistikCards(globalSiswaData);
+            }
+        } catch (error) {
+            console.log("Koneksi background sync terputus sementara waktu.");
+        }
+    }
+
+    function renderTableData(dataArray) {
+        const tbody = document.getElementById('guruTableBody');
+        if(dataArray.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color:#64748b;">Tidak ada data siswa yang cocok dengan pencarian.</td></tr>`;
+            return;
+        }
+
+        let htmlRows = "";
+        dataArray.forEach((siswa, index) => {
+            let badgeClass = "badge-waiting";
+            if(siswa.status_verifikasi === "Data Sudah Benar") badgeClass = "badge-success";
+            if(siswa.status_verifikasi === "Data Ada Yang Kurang") badgeClass = "badge-danger";
+
+            // Mengecek apakah tautan berkas tersedia, jika tidak maka tombol otomatis dinonaktifkan (#) atau tidak mengarah ke mana-mana
+            htmlRows += `
+                <tr>
+                    <td style="text-align: center; font-weight: bold; color: #64748b;">${index + 1}</td>
+                    <td style="font-weight: 600; color: #1e3c72; font-size: 0.95rem;">${siswa.nama_siswa}</td>
+                    <td style="font-family: monospace; font-size: 0.95rem; font-weight: 600; color: #475569;">${siswa.nisn}</td>
+                    <td>
+                        <div class="file-grid">
+                            <a href="${siswa.link_skl || '#'}" target="_blank" class="btn-view" title="Lihat SKL">SKL</a>
+                            <a href="${siswa.link_nisn || '#'}" target="_blank" class="btn-view" title="Lihat Kartu NISN">NISN</a>
+                            <a href="${siswa.link_ijazah || '#'}" target="_blank" class="btn-view" title="Lihat Ijazah">IJZ</a>
+                            <a href="${siswa.link_kk || '#'}" target="_blank" class="btn-view" title="Lihat Kartu Keluarga">KK</a>
+                            <a href="${siswa.link_ktp || '#'}" target="_blank" class="btn-view" title="Lihat KTP Orang Tua">KTP</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="parent-info">
+                            <strong>Ibu:</strong> ${siswa.nama_ibu || '-'}<br>
+                            <strong>Ayah:</strong> ${siswa.nama_ayah || '-'}
+                        </div>
+                    </td>
+                    <td><span class="status-badge ${badgeClass}">${siswa.status_verifikasi || 'Mohon Menunggu'}</span></td>
+                    <td>
+                        <div class="action-flex">
+                            <button class="action-btn btn-valid" onclick="gantiStatusSiswaDirect('${siswa.nisn}', 'Data Sudah Benar')">✅ Benar</button>
+                            <button class="action-btn btn-invalid" onclick="gantiStatusSiswaDirect('${siswa.nisn}', 'Data Ada Yang Kurang')">❌ Kurang</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = htmlRows;
+    }
+
+    function updateStatistikCards(dataArray) {
+        let total = dataArray.length;
+        let valid = dataArray.filter(s => s.status_verifikasi === "Data Sudah Benar").length;
+        let kurang = dataArray.filter(s => s.status_verifikasi === "Data Ada Yang Kurang").length;
+        let menunggu = total - (valid + kurang);
+
+        document.getElementById('statTotal').innerText = total;
+        document.getElementById('statValid').innerText = valid;
+        document.getElementById('statKurang').innerText = kurang;
+        document.getElementById('statBelum').innerText = menunggu;
+    }
+
+    function filterTabelSiswa() {
+        const keyword = document.getElementById('searchTableInput').value.toLowerCase().trim();
+        const hasilFilter = globalSiswaData.filter(siswa => 
+            siswa.nama_siswa.toLowerCase().includes(keyword) || 
+            siswa.nisn.toString().includes(keyword)
+        );
+        renderTableData(hasilFilter);
+    }
+
+    async function gantiStatusSiswaDirect(nisn, statusBaru) {
+        if(!confirm(`Ubah status data siswa NISN ${nisn} menjadi "${statusBaru}"?`)) return;
+        
+        // Cari tombol yang sedang diklik untuk memberikan efek memuat (loading)
+        const keyword = document.getElementById('searchTableInput').value.toLowerCase().trim();
+        
+        try {
+            const response = await fetch(WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "updateStatus", nisn: nisn, status: statusBaru })
+            });
+            
+            // Wajib membaca respon JSON dari server Apps Script
+            const result = await response.json();
+            
+            if (result.status === "success") {
+                alert(`Sukses! Status NISN ${nisn} sekarang: "${statusBaru}".\n\nSiswa dapat melakukan refresh pada halaman portal mereka untuk melihat perubahan.`);
+                
+                // Update data internal secara lokal agar UI sinkron
+                globalSiswaData.forEach(s => {
+                    if(s.nisn.toString() === nisn.toString()) s.status_verifikasi = statusBaru;
+                });
+                
+                // Render ulang tabel berdasarkan kondisi pencarian saat ini
+                if (keyword !== "") {
+                    filterTabelSiswa();
+                } else {
+                    renderTableData(globalSiswaData);
+                }
+                updateStatistikCards(globalSiswaData);
+            } else {
+                // Jika Apps Script menolak atau mengirimkan pesan error
+                alert("Gagal memperbarui database: " + result.message);
+            }
+        } catch (error) {
+            alert("Terjadi kendala jaringan! Gagal terhubung ke server Google.");
+            console.error(error);
+        }
+    }
+
+    // Eksekusi utama saat web dibuka
+    window.onload = () => {
+        loadDataGuruSilap();
+        // INTERVAL JALAN OTOMATIS: Update data di background tiap 10 detik tanpa me-refresh halaman web
+        setInterval(loadDataGuruSilap, 10000); 
+    };
+</script>
+</body>
+</html>

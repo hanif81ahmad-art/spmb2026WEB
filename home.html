@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Ulang SPMB 2026 - SMKN 1 Cikarang Barat</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: transparent; overflow: hidden; }
+
+        .fullscreen-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background-image: linear-gradient(rgba(30, 60, 114, 0.45), rgba(42, 82, 152, 0.45)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1920');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            z-index: 999999; padding: 20px;
+        }
+
+        .spmb-container {
+            text-align: center; padding: 35px 30px; width: 100%; max-width: 480px;
+            background: rgba(255, 255, 255, 0.98); border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px);
+        }
+
+        .header-logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .logo-box img { max-height: 65px; width: auto; object-fit: contain; }
+
+        .title-section h2 { color: #1e3c72; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .title-section h4 { color: #64748b; font-size: 0.85rem; font-weight: 600; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Input Box Premium */
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 8px; text-transform: uppercase; }
+        .input-gate { width: 100%; padding: 14px 16px; border-radius: 8px; border: 2px solid #cbd5e1; text-align: center; font-weight: 700; font-size: 1.1rem; color: #1e293b; letter-spacing: 0.5px; transition: all 0.2s; outline: none; background: #f8fafc; }
+        .input-gate:focus { border-color: #1e3c72; background: #fff; box-shadow: 0 0 0 4px rgba(30, 60, 114, 0.12); }
+
+        .btn-gradient {
+            display: block; width: 100%; padding: 14px; font-size: 1rem; font-weight: bold;
+            letter-spacing: 0.5px; color: #ffffff; border: none;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 8px; box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+            transition: all 0.2s ease; cursor: pointer;
+        }
+        .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4); opacity: 0.95; }
+        .btn-gradient:active { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="fullscreen-overlay">
+        <div class="spmb-container">
+            <div class="header-logos">
+                <div class="logo-box"><img src="https://raw.githubusercontent.com/hanif81ahmad-art/spmb2026/main/Logo_SMK_Negeri_1_Cikarang_Barat.jpg" alt="Logo Sekolah"></div>
+                <div class="logo-box"><img src="https://raw.githubusercontent.com/hanif81ahmad-art/spmb2026/main/logo%20spmb%20jabar%202026.png" alt="Logo Jabar"></div>
+            </div>
+
+            <div class="title-section">
+                <h2>GERBANG MASUK PORTAL</h2>
+                <h4>SMKN 1 Cikarang Barat - SPMB 2026</h4>
+            </div>
+
+            <div class="input-group">
+                <label for="gateToken">NISN Siswa / Kode Akses Guru</label>
+                <input type="text" id="gateToken" class="input-gate" placeholder="Masukkan Kode Anda..." autocomplete="off" 
+                       maxlength="10" 
+                       oninput="if(!isNaN(this.value)) { if(this.value.length > 10) this.value = this.value.slice(0,10); } " 
+                       onkeyup="if(event.key === 'Enter') validasiMasukPortal()">
+            </div>
+
+            <button onclick="validasiMasukPortal()" class="btn-gradient">MASUK KE SYSTEM</button>
+        </div>
+    </div>
+
+<script>
+    function validasiMasukPortal() {
+        const token = document.getElementById('gateToken').value.trim();
+        
+        if (token === "") {
+            alert("⚠️ Kolom akses tidak boleh kosong!");
+            return;
+        }
+
+        // =========================================================================
+        // 🔑 KODE AMAN AKSES GURU (Bypass pengecekan 10 digit khusus untuk Guru)
+        // =========================================================================
+        if (token === "GURU2026" || token === "ADMINSMK") {
+            alert("🔓 Hak Akses Guru Dikonfirmasi. Selamat bertugas!");
+            window.location.href = "guru.html"; 
+            return;
+        } 
+        
+        // 🧑‍🎓 JIKA SISWA INPUT ANGKA (VALIDASI WAJIB TEPAT 10 DIGIT)
+        if (!isNaN(token)) {
+            if (token.length !== 10) {
+                alert("❌ Format NISN Salah! Nomor NISN pendaftar wajib berisi tepat 10 digit angka.");
+                return;
+            }
+            
+            // Pengalihan ke halaman siswa jika sudah tepat 10 digit
+            alert("🔓 Nomor NISN Valid. Membuka berkas portal pendaftaran...");
+            window.location.href = "siswa.html?nisn=" + token;
+        } 
+        
+        else {
+            alert("❌ Kode Tidak Dikenal! Masukkan 10 digit nomor NISN Anda atau gunakan Kode Akses Guru.");
+        }
+    }
+</script>
+</body>
+</html>
