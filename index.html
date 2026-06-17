@@ -5,20 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Ulang SPMB 2026 - SMKN 1 Cikarang Barat</title>
 
- <meta property="og:title"
-      content="Daftar Ulang SPMB 2026 - SMKN 1 Cikarang Barat">
-
-<meta property="og:description"
-      content="Portal Daftar Ulang SPMB 2026 SMKN 1 Cikarang Barat">
-
-<meta property="og:image"
-      content="https://spmb2026-web.vercel.app/img/preview-spmb-2026.png">
-
-<meta property="og:url"
-      content="https://spmb2026-web.vercel.app/">
-
-<meta property="og:type"
-      content="website">
+    <meta property="og:title" content="Daftar Ulang SPMB 2026 - SMKN 1 Cikarang Barat">
+    <meta property="og:description" content="Portal Daftar Ulang SPMB 2026 SMKN 1 Cikarang Barat">
+    <meta property="og:image" content="https://spmb2026-web.vercel.app/img/preview-spmb-2026.png">
+    <meta property="og:url" content="https://spmb2026-web.vercel.app/">
+    <meta property="og:type" content="website">
+    
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background: transparent; overflow: hidden; }
@@ -26,38 +18,68 @@
         .fullscreen-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            background-image: linear-gradient(rgba(30, 60, 114, 0.45), rgba(42, 82, 152, 0.45)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1920');
-            background-size: cover; background-position: center; background-repeat: no-repeat;
+            /* Overlay dibuat sedikit lebih gelap agar background kolase tidak mendominasi */
+            background-image: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.65)), url('img/background-spmb.png');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
             z-index: 999999; padding: 20px;
         }
 
         .spmb-container {
             text-align: center; padding: 35px 30px; width: 100%; max-width: 480px;
-            background: rgba(255, 255, 255, 0.98); border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); backdrop-filter: blur(10px);
+            background: #ffffff; /* DIUBAH MENJADI PUTIH PADAT SOLID */
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.25); 
+            /* backdrop-filter dihapus agar tidak membuat distorsi warna di belakang logo */
+        }
+        .header-logos { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px; 
         }
 
-        .header-logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .logo-box img { max-height: 65px; width: auto; object-fit: contain; }
+        /* Trik CSS untuk menutupi background logo yang pecah/kotor */
+        .logo-box img { 
+            max-height: 65px; 
+            width: auto; 
+            object-fit: contain; 
+            background: #ffffff; /* Memaksa latar belakang logo menjadi putih solid */
+            padding: 8px 12px;   /* Memberikan jarak agar menyerupai frame kartu mini */
+            border-radius: 8px;  /* Membuat sudut kotak logo melengkung halus */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Memberi bayangan halus agar terlihat modern */
+        }
 
-        .title-section h2 { color: #1e3c72; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
+        /* Menggunakan warna Biru Navy (#0b2265) yang disesuaikan dengan warna dominan Logo SMKN 1 Cikbar */
+        .title-section h2 { color: #0b2265; font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
         .title-section h4 { color: #64748b; font-size: 0.85rem; font-weight: 600; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Input Box Premium */
+        /* Input Box */
         .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 8px; text-transform: uppercase; }
+        .input-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 8px; text-transform: uppercase; }
         .input-gate { width: 100%; padding: 14px 16px; border-radius: 8px; border: 2px solid #cbd5e1; text-align: center; font-weight: 700; font-size: 1.1rem; color: #1e293b; letter-spacing: 0.5px; transition: all 0.2s; outline: none; background: #f8fafc; }
-        .input-gate:focus { border-color: #1e3c72; background: #fff; box-shadow: 0 0 0 4px rgba(30, 60, 114, 0.12); }
+        .input-gate:focus { border-color: #0b2265; background: #fff; box-shadow: 0 0 0 4px rgba(11, 34, 101, 0.15); }
 
+        /* Tombol dengan tema Biru Logo Sekolah */
         .btn-gradient {
             display: block; width: 100%; padding: 14px; font-size: 1rem; font-weight: bold;
             letter-spacing: 0.5px; color: #ffffff; border: none;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border-radius: 8px; box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+            background: linear-gradient(135deg, #0b2265 0%, #1a3a8f 100%);
+            border-radius: 8px; box-shadow: 0 4px 15px rgba(11, 34, 101, 0.3);
             transition: all 0.2s ease; cursor: pointer;
+            margin-bottom: 25px;
         }
-        .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4); opacity: 0.95; }
+        .btn-gradient:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(11, 34, 101, 0.4); opacity: 0.95; }
         .btn-gradient:active { transform: translateY(0); }
+
+        .copyright-notice {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +105,10 @@
             </div>
 
             <button onclick="validasiMasukPortal()" class="btn-gradient">MASUK KE SYSTEM</button>
+
+            <div class="copyright-notice">
+                &copy; 2026 Hanif Ahmad. All Rights Reserved SMKN 1 CIKARANG BARAT
+            </div>
         </div>
     </div>
 
@@ -95,23 +121,18 @@
             return;
         }
 
-        // =========================================================================
-        // 🔑 KODE AMAN AKSES GURU (Bypass pengecekan 10 digit khusus untuk Guru)
-        // =========================================================================
         if (token === "GURU2026" || token === "ADMINSMK") {
             alert("🔓 Hak Akses Guru Dikonfirmasi. Selamat bertugas!");
             window.location.href = "guru.html"; 
             return;
         } 
         
-        // 🧑‍🎓 JIKA SISWA INPUT ANGKA (VALIDASI WAJIB TEPAT 10 DIGIT)
         if (!isNaN(token)) {
             if (token.length !== 10) {
                 alert("❌ Format NISN Salah! Nomor NISN pendaftar wajib berisi tepat 10 digit angka.");
                 return;
             }
             
-            // Pengalihan ke halaman siswa jika sudah tepat 10 digit
             alert("🔓 Nomor NISN Valid. Membuka berkas portal pendaftaran...");
             window.location.href = "siswa.html?nisn=" + token;
         } 
